@@ -125,7 +125,7 @@ lunar_solar_ring_simulator/
 ### 1. Clone Repository
 
 ```bash
-git clone https://github.com/your-username/lunar-solar-simulator.git
+git clone https://github.com/tapanhegde26/LSPGSimulator.git
 cd lunar-solar-simulator
 ```
 
