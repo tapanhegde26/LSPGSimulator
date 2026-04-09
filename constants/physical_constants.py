@@ -1,0 +1,5 @@
+# constants/physical_constants.py
+
+MOON_RADIUS_KM = 1737
+SOLAR_IRRADIANCE = 1361  # W/m²
+EARTH_MOON_DISTANCE_KM = 384400
