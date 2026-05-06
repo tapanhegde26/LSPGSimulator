@@ -1,12 +1,13 @@
 # Lunar Solar Ring Simulator
 
+[![CI/CD Pipeline](https://github.com/your-username/lunar-solar-simulator/workflows/CI%2FCD%20Pipeline/badge.svg)](https://github.com/your-username/lunar-solar-simulator/actions)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+[![Python 3.12+](https://img.shields.io/badge/python-3.12+-blue.svg)](https://www.python.org/downloads/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.0+-blue.svg)](https://www.typescriptlang.org/)
+
 A full-stack interactive simulation platform that models a futuristic concept of generating solar energy from the Moon and transmitting it wirelessly to Earth.
 
-> Inspired by next-generation space-based solar power systems.
-
----
-
-## Demo
+> Inspired by next-generation space-based solar power systems like the Shimizu Corporation's Luna Ring concept.
 
 ![Demo](./screenshots/demo.gif)
 
@@ -14,34 +15,29 @@ A full-stack interactive simulation platform that models a futuristic concept of
 
 ## Features
 
-- **3D Moon Visualization** with realistic texture using Three.js
-- **Energy Beam Animation** simulating Moon → Earth transmission
-- **Interactive Energy Graphs** with real-time updates via Plotly.js
-- **AI-like Insights Engine** with auto-generated analysis
-- **Dynamic Simulation Controls** with slider-based inputs
-- **Futuristic UI** featuring dark theme, glow effects, and animations
-- **Real-time Simulation Execution** via FastAPI backend
-- **Premium Dashboard Experience** with responsive design
+### Core Simulation
+- **3D Earth-Moon Visualization** - Interactive Three.js scene with orbital mechanics
+- **Real-time Energy Streaming** - WebSocket-powered live data visualization
+- **Physics-Based Calculations** - Accurate energy generation and transmission models
+- **AI-Powered Insights** - Intelligent analysis and recommendations
 
----
+### Advanced Physics (v2.0)
+- **Lunar Day/Night Cycle** - 29.5-day rotation effects on solar exposure
+- **Atmospheric Absorption** - Weather and zenith angle impact modeling
+- **Beam Spreading Loss** - Distance-based transmission calculations
+- **Panel Degradation** - Time-based efficiency reduction
 
-## How It Works
+### Optimization & Analysis
+- **Parameter Optimization** - Optuna-powered AI optimization
+- **Ground Station Placement** - Optimal location algorithms
+- **Scenario Comparison** - Compare multiple configurations
+- **Data Export** - JSON, CSV, and HTML report generation
 
-The system simulates a conceptual energy pipeline:
-
-```
-Solar Energy on Moon → Energy Generation → Wireless Transmission → Earth Reception
-```
-
-### Simulation Components
-
-| Component | Description |
-|-----------|-------------|
-| **Lunar Ring Model** | Estimates solar panel coverage across the lunar equator |
-| **Energy Generation Engine** | Calculates total energy based on efficiency and panel area |
-| **Transmission Model** | Applies loss factors based on distance and medium (microwave/laser) |
-| **Earth Receiver Model** | Computes usable energy received on Earth via ground stations |
-| **Insights Engine** | Generates intelligent observations from simulation results |
+### Production Ready
+- **Docker Support** - Containerized deployment
+- **CI/CD Pipeline** - GitHub Actions automation
+- **Comprehensive Tests** - pytest with coverage
+- **Type Safety** - Full TypeScript and Python type hints
 
 ---
 
@@ -50,11 +46,12 @@ Solar Energy on Moon → Energy Generation → Wireless Transmission → Earth R
 ### Backend
 | Technology | Purpose |
 |------------|---------|
-| Python 3.13+ | Core language |
-| FastAPI | REST API framework |
+| Python 3.12+ | Core language |
+| FastAPI | REST API & WebSocket |
 | Pydantic | Data validation |
-| NumPy | Numerical computations |
-| Plotly | Graph generation |
+| Optuna | Parameter optimization |
+| NumPy | Scientific computing |
+| pytest | Testing framework |
 
 ### Frontend
 | Technology | Purpose |
@@ -62,16 +59,19 @@ Solar Energy on Moon → Energy Generation → Wireless Transmission → Earth R
 | React 19 | UI framework |
 | TypeScript | Type safety |
 | Vite | Build tool |
+| Three.js | 3D visualization |
+| React Three Fiber | React renderer for Three.js |
 | Tailwind CSS | Styling |
 | Framer Motion | Animations |
 | Plotly.js | Interactive charts |
 
-### 3D Visualization
+### DevOps
 | Technology | Purpose |
 |------------|---------|
-| Three.js | 3D rendering |
-| React Three Fiber | React renderer for Three.js |
-| Drei | Useful helpers for R3F |
+| Docker | Containerization |
+| Docker Compose | Multi-container orchestration |
+| GitHub Actions | CI/CD pipeline |
+| Nginx | Frontend serving |
 
 ---
 
@@ -79,76 +79,98 @@ Solar Energy on Moon → Energy Generation → Wireless Transmission → Earth R
 
 ```
 lunar_solar_ring_simulator/
-├── api.py                    # FastAPI application entry point
-├── main.py                   # CLI simulation runner
-├── constants/
-│   └── physical_constants.py # Moon radius, solar irradiance, etc.
-├── models/
-│   ├── input_model.py        # Pydantic input validation
-│   └── output_model.py       # Output data structures
-├── simulation/
-│   ├── orchestrator.py       # Main simulation coordinator
-│   ├── lunar_ring.py         # Lunar ring area calculations
-│   ├── energy_model.py       # Energy generation logic
-│   ├── transmission_model.py # Transmission loss calculations
-│   └── earth_receiver.py     # Ground station reception
-├── utils/
-│   └── logger.py             # Logging utilities
-└── lunar-frontend/           # React frontend application
-    ├── src/
-    │   ├── App.tsx           # Main application component
-    │   ├── components/       # UI components
-    │   │   ├── SimulationForm.tsx
-    │   │   ├── Results.tsx
-    │   │   ├── EnergyGraph.tsx
-    │   │   ├── Insights.tsx
-    │   │   ├── MoonVisual.tsx
-    │   │   ├── MoonBackground.tsx
-    │   │   └── EnergyBeam.tsx
-    │   ├── services/
-    │   │   └── api.ts        # API client
-    │   └── utils/
-    │       └── insights.ts   # Insights generation
-    └── package.json
+├── lunar-backend/                 # Python FastAPI backend
+│   ├── api.py                     # Main API endpoints
+│   ├── config.py                  # Environment configuration
+│   ├── models/
+│   │   ├── request.py             # Input validation models
+│   │   └── response.py            # Output data models
+│   ├── services/
+│   │   ├── simulation_service.py  # Main orchestrator
+│   │   ├── energy_model.py        # Energy calculations
+│   │   ├── transmission_model.py  # Transmission physics
+│   │   ├── physics_model.py       # Advanced physics
+│   │   ├── station_optimizer.py   # Ground station optimization
+│   │   ├── parameter_optimizer.py # Optuna optimization
+│   │   └── export_service.py      # Data export
+│   ├── utils/
+│   │   ├── constants.py           # Physical constants
+│   │   └── logger.py              # Logging config
+│   ├── tests/                     # pytest test suite
+│   ├── requirements.txt
+│   └── Dockerfile
+│
+├── lunar-frontend/                # React TypeScript frontend
+│   ├── src/
+│   │   ├── App.tsx                # Main application
+│   │   ├── components/
+│   │   │   ├── EarthMoonSystem.tsx    # 3D visualization
+│   │   │   ├── SimulationForm.tsx     # Input controls
+│   │   │   ├── Results.tsx            # Results display
+│   │   │   ├── EnergyGraph.tsx        # Live chart
+│   │   │   ├── Insights.tsx           # AI insights
+│   │   │   ├── ErrorBoundary.tsx      # Error handling
+│   │   │   └── LoadingSpinner.tsx     # Loading states
+│   │   ├── hooks/
+│   │   │   ├── useSimulation.ts       # Simulation state
+│   │   │   └── useWebSocketSimulation.ts
+│   │   ├── types/
+│   │   │   └── simulation.ts          # TypeScript types
+│   │   ├── config/
+│   │   │   └── api.ts                 # API configuration
+│   │   └── services/
+│   │       └── api.ts                 # API client
+│   ├── package.json
+│   └── Dockerfile
+│
+├── docker-compose.yml             # Container orchestration
+├── .github/workflows/ci.yml       # CI/CD pipeline
+└── README.md
 ```
 
 ---
 
-## Installation & Setup
+## Quick Start
 
 ### Prerequisites
+- Python 3.12+
+- Node.js 20+
+- Docker (optional)
 
-- Python 3.13+
-- Node.js 18+
-- npm or yarn
-
-### 1. Clone Repository
+### Option 1: Docker (Recommended)
 
 ```bash
+# Clone the repository
 git clone https://github.com/your-username/lunar-solar-simulator.git
 cd lunar-solar-simulator
+
+# Start all services
+docker-compose up --build
+
+# Access the application
+# Frontend: http://localhost
+# Backend API: http://localhost:8000
+# API Docs: http://localhost:8000/docs
 ```
 
-### 2. Backend Setup
+### Option 2: Manual Setup
 
+#### Backend
 ```bash
-# Create and activate virtual environment
-python3 -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
+cd lunar-backend
+
+# Create virtual environment
+python -m venv venv
+source venv/bin/activate  # Windows: venv\Scripts\activate
 
 # Install dependencies
-pip install fastapi uvicorn pydantic numpy plotly
+pip install -r requirements.txt
 
-# Start the API server
-uvicorn api:app --reload
+# Start the server
+uvicorn api:app --reload --host 0.0.0.0 --port 8000
 ```
 
-Backend will run at: http://127.0.0.1:8000
-
-API documentation available at: http://127.0.0.1:8000/docs
-
-### 3. Frontend Setup
-
+#### Frontend
 ```bash
 cd lunar-frontend
 
@@ -159,44 +181,48 @@ npm install
 npm run dev
 ```
 
-Frontend will run at: http://localhost:5173
-
 ---
 
-## API Endpoints
+## API Reference
+
+### Endpoints
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| GET | `/` | Health check |
-| POST | `/simulate` | Run simulation with input parameters |
-| POST | `/simulate-with-graph` | Run simulation and return graph data |
+| GET | `/health` | Health check |
+| POST | `/simulate` | Run simulation |
+| POST | `/optimize` | AI parameter optimization |
+| POST | `/optimize/quick` | Quick suggestions |
+| POST | `/export/json` | Export as JSON |
+| POST | `/export/csv` | Export as CSV |
+| POST | `/export/report` | Generate HTML report |
+| WS | `/ws/simulate` | Real-time streaming |
 
-### Simulation Input Parameters
+### Simulation Request
 
 ```json
 {
   "ring_width_km": 50,
   "panel_efficiency": 0.22,
   "transmission_type": "microwave",
-  "num_ground_stations": 5
+  "num_ground_stations": 5,
+  "simulation_hours": 24,
+  "include_lunar_cycle": false,
+  "include_atmospheric_effects": false
 }
 ```
 
-| Parameter | Type | Range | Description |
-|-----------|------|-------|-------------|
-| `ring_width_km` | float | 0-500 | Width of the solar panel ring on the Moon |
-| `panel_efficiency` | float | 0-1 | Solar panel conversion efficiency |
-| `transmission_type` | string | microwave/laser | Energy transmission method |
-| `num_ground_stations` | int | 1-100 | Number of Earth receiving stations |
-
-### Simulation Output
+### Simulation Response
 
 ```json
 {
   "total_energy_generated_gw": 1234.56,
   "energy_received_gw": 987.65,
   "transmission_loss_percent": 20.0,
-  "system_efficiency": 0.80
+  "system_efficiency": 0.80,
+  "stations": [...],
+  "time_series": [...],
+  "insights": [...]
 }
 ```
 
@@ -204,42 +230,43 @@ Frontend will run at: http://localhost:5173
 
 ## Physical Constants
 
-The simulation uses the following physical constants:
-
 | Constant | Value | Unit |
 |----------|-------|------|
-| Moon Radius | 1,737 | km |
-| Solar Irradiance | 1,361 | W/m² |
+| Moon Radius | 1,737.4 | km |
+| Solar Constant | 1,361 | W/m² |
 | Earth-Moon Distance | 384,400 | km |
+| Lunar Day | 708 | hours |
+| Microwave Base Loss | 15 | % |
+| Laser Base Loss | 30 | % |
 
 ---
 
-## Development
+## Testing
 
-### Running Tests
-
+### Backend Tests
 ```bash
-# Backend tests (if available)
-pytest
-
-# Frontend tests
-cd lunar-frontend
-npm test
+cd lunar-backend
+pytest tests/ -v --cov=services --cov-report=term-missing
 ```
 
-### Building for Production
-
+### Frontend Build
 ```bash
-# Frontend build
 cd lunar-frontend
 npm run build
+npm run lint
 ```
 
 ---
 
-## Screenshots
+## Deployment
 
-> Add your screenshots in the `screenshots/` directory
+### Vercel + Railway (Recommended)
+1. Deploy frontend to Vercel
+2. Deploy backend to Railway
+3. Update environment variables
+
+### AWS / GCP / Azure
+Use the provided Dockerfiles for container deployment.
 
 ---
 
@@ -253,6 +280,17 @@ npm run build
 
 ---
 
+## Roadmap
+
+- [ ] User authentication
+- [ ] Saved scenarios database
+- [ ] Real-time collaboration
+- [ ] Mobile app (React Native)
+- [ ] VR visualization mode
+- [ ] Integration with real satellite data
+
+---
+
 ## License
 
 This project is open source and available under the [MIT License](LICENSE).
@@ -261,6 +299,15 @@ This project is open source and available under the [MIT License](LICENSE).
 
 ## Acknowledgments
 
-- Inspired by the [Shimizu Corporation's Luna Ring concept](https://www.shimz.co.jp/en/topics/dream/content03/)
-- Three.js community for 3D visualization resources
-- FastAPI for the excellent Python web framework
+- [Shimizu Corporation's Luna Ring Concept](https://www.shimz.co.jp/en/topics/dream/content03/)
+- [NASA Space-Based Solar Power Research](https://www.nasa.gov/topics/technology/features/solar_power.html)
+- Three.js and React Three Fiber communities
+- FastAPI and Pydantic maintainers
+
+---
+
+## Author
+
+Built with passion for space technology and clean energy.
+
+**Star this repo if you find it useful!**

@@ -1,0 +1,62 @@
+# Lunar Solar Simulator - Docker Compose Configuration
+# Run with: docker-compose up --build
+
+version: '3.8'
+
+services:
+  # Backend API Service
+  backend:
+    build:
+      context: ./lunar-backend
+      dockerfile: Dockerfile
+    container_name: lunar-backend
+    ports:
+      - "8000:8000"
+    environment:
+      - APP_NAME=Lunar Solar Simulator API
+      - APP_VERSION=2.0.0
+      - DEBUG=false
+      - HOST=0.0.0.0
+      - PORT=8000
+      - CORS_ORIGINS=["http://localhost:5173","http://localhost:3000","http://localhost:80"]
+      - LOG_LEVEL=INFO
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    restart: unless-stopped
+    networks:
+      - lunar-network
+
+  # Frontend Web Application
+  frontend:
+    build:
+      context: ./lunar-frontend
+      dockerfile: Dockerfile
+      args:
+        - VITE_API_URL=http://localhost:8000
+        - VITE_WS_URL=ws://localhost:8000
+    container_name: lunar-frontend
+    ports:
+      - "80:80"
+    depends_on:
+      backend:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
+    networks:
+      - lunar-network
+
+networks:
+  lunar-network:
+    driver: bridge
+
+# Optional: Add volumes for persistent data
+# volumes:
+#   simulation-data:

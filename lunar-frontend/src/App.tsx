@@ -1,89 +1,141 @@
-import { useState } from "react";
+/**
+ * Lunar Solar Simulator - Main Application
+ */
 import SimulationForm from "./components/SimulationForm";
 import Results from "./components/Results";
 import EnergyGraph from "./components/EnergyGraph";
 import Insights from "./components/Insights";
-import MoonVisual from "./components/MoonVisual";
 import MoonBackground from "./components/MoonBackground";
-import EnergyBeam from "./components/EnergyBeam";
-import { runSimulation } from "./services/api";
+import EarthMoonSystem from "./components/EarthMoonSystem";
+import { ErrorBoundary } from "./components/ErrorBoundary";
+import { useSimulation } from "./hooks";
+import type { SimulationInput } from "./types";
 
 function App() {
-  const [result, setResult] = useState(null);
+  const {
+    result,
+    liveData,
+    isLoading,
+    isStreaming,
+    error,
+    runSimulationWithStreaming,
+  } = useSimulation();
 
-  const handleRun = async (input: any) => {
-    try {
-      const data = await runSimulation(input);
-      setResult(data);
-    } catch (err) {
-      alert("Simulation failed");
-      console.error(err);
-    }
+  const handleRun = async (input: SimulationInput) => {
+    await runSimulationWithStreaming(input);
   };
 
   return (
     <div className="relative min-h-screen bg-black text-white overflow-hidden p-6">
-
-      {/* 🌕 Moon Background (deep layer) */}
-      <div className="absolute inset-0 -z-20 opacity-30">
-        <MoonBackground />
+      {/* Background */}
+      <div className="absolute inset-0 -z-20 opacity-20">
+        <ErrorBoundary fallback={<div className="w-full h-full bg-slate-900" />}>
+          <MoonBackground />
+        </ErrorBoundary>
       </div>
 
-      {/* 🌌 Base Gradient Background */}
-      <div className="absolute inset-0 -z-10 bg-gradient-to-br from-black via-slate-900 to-black"></div>
+      <div className="absolute inset-0 -z-10 bg-gradient-to-br from-black via-slate-900 to-black" />
 
-      {/* ✨ Center Glow Overlay */}
-      <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_center,rgba(59,130,246,0.12),transparent_70%)] pointer-events-none"></div>
-
-      {/* 🌠 Top Accent Glow */}
-      <div className="absolute top-0 left-0 w-full h-64 bg-gradient-to-b from-blue-500/10 to-transparent blur-2xl -z-10"></div>
-
-      {/* 🌠 Bottom Accent Glow */}
-      <div className="absolute bottom-0 left-0 w-full h-64 bg-gradient-to-t from-purple-500/10 to-transparent blur-2xl -z-10"></div>
+      {/* Radial glow effect */}
+      <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_center,rgba(59,130,246,0.08),transparent_70%)] pointer-events-none" />
 
       {/* Header */}
-      <div className="text-center mb-10 relative z-10">
+      <header className="text-center mb-8 relative z-10">
         <h1 className="text-4xl md:text-5xl font-bold text-blue-400 drop-shadow-[0_0_25px_rgba(59,130,246,0.9)]">
-          🌕 Lunar Solar Simulator
+          Lunar Solar Ring Simulator
         </h1>
-        <p className="text-gray-400 mt-3 text-lg">
-          Simulating Space-Based Solar Energy Transmission
+        <p className="text-gray-400 mt-2 max-w-2xl mx-auto">
+          Interactive simulation of space-based solar power generation from the Moon
+          and wireless energy transmission to Earth
         </p>
-      </div>
-
-      {/* Main Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 relative z-10">
         
-        {/* Left Panel */}
-        <div className="bg-slate-900/90 backdrop-blur-sm p-6 rounded-2xl shadow-lg border border-slate-800 hover:shadow-blue-500/20 transition duration-300">
-          <SimulationForm onRun={handleRun} />
+        {/* Status indicator */}
+        <div className="mt-4 flex items-center justify-center gap-2 text-sm">
+          <span
+            className={`w-2 h-2 rounded-full ${
+              isStreaming ? "bg-green-400 animate-pulse" : "bg-gray-500"
+            }`}
+          />
+          <span className="text-gray-500">
+            {isStreaming ? "Streaming live data..." : "Ready"}
+          </span>
+        </div>
+      </header>
+
+      {/* Error Alert */}
+      {error && (
+        <div className="max-w-4xl mx-auto mb-6 bg-red-900/50 border border-red-500 rounded-lg p-4 text-center">
+          <p className="text-red-300">{error}</p>
+        </div>
+      )}
+
+      {/* Main Content */}
+      <div className="max-w-7xl mx-auto relative z-10">
+        {/* 3D Visualization - Full Width */}
+        <div className="mb-6 bg-slate-900/90 backdrop-blur-sm rounded-2xl border border-slate-800 shadow-lg overflow-hidden">
+          <div className="p-4 border-b border-slate-800">
+            <h2 className="text-lg font-semibold text-blue-300">
+              Earth-Moon Energy System
+            </h2>
+            <p className="text-xs text-gray-500 mt-1">
+              3D visualization of the lunar solar ring and energy transmission
+            </p>
+          </div>
+          <ErrorBoundary fallback={
+            <div className="h-[400px] flex items-center justify-center text-gray-500">
+              3D visualization unavailable
+            </div>
+          }>
+            <EarthMoonSystem 
+              simulationData={result} 
+              isStreaming={isStreaming}
+            />
+          </ErrorBoundary>
         </div>
 
-        {/* Right Panel */}
-        <div className="bg-slate-900/90 backdrop-blur-sm p-6 rounded-2xl shadow-lg border border-slate-800 hover:shadow-purple-500/20 transition duration-300">
-          
-          {/* 🌕 Moon + Energy Beam */}
-          <div className="relative flex justify-center items-center">
-            <MoonVisual />
-            <EnergyBeam />
+        {/* Two Column Layout */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Left Panel - Controls */}
+          <div className="bg-slate-900/90 backdrop-blur-sm p-6 rounded-2xl border border-slate-800 shadow-lg">
+            <SimulationForm
+              onRun={handleRun}
+              isLoading={isLoading}
+              isStreaming={isStreaming}
+            />
           </div>
 
-          {/* 📈 Graph */}
-          <div className="mt-4">
-            <EnergyGraph data={result} />
+          {/* Right Panel - Graph */}
+          <div className="bg-slate-900/90 backdrop-blur-sm p-6 rounded-2xl border border-slate-800 shadow-lg">
+            <ErrorBoundary>
+              <EnergyGraph liveData={liveData} isLoading={isLoading} />
+            </ErrorBoundary>
           </div>
+        </div>
+
+        {/* Results Section */}
+        <div className="mt-6">
+          <ErrorBoundary>
+            <Results data={result} isLoading={isLoading} />
+          </ErrorBoundary>
+        </div>
+
+        {/* Insights Section */}
+        <div>
+          <ErrorBoundary>
+            <Insights data={result} />
+          </ErrorBoundary>
         </div>
       </div>
 
-      {/* Results */}
-      <div className="mt-10 relative z-10">
-        <Results data={result} />
-      </div>
-
-      {/* 🧠 Insights */}
-      <div className="relative z-10">
-        <Insights data={result} />
-      </div>
+      {/* Footer */}
+      <footer className="mt-16 text-center text-gray-600 text-sm relative z-10">
+        <p>
+          Lunar Solar Ring Simulator v2.0 | Inspired by space-based solar power concepts
+        </p>
+        <p className="mt-1 text-xs text-gray-700">
+          Built with React, Three.js, FastAPI, and Python
+        </p>
+      </footer>
     </div>
   );
 }
